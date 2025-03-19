@@ -25,7 +25,6 @@
     ],
     "env": {
         "APP_NAME": "Laravel Vercel",
-        "APP_DEBUG": "false",
         "APP_ENV": "production",
         "SESSION_SECURE_COOKIE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",

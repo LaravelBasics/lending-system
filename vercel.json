@@ -20,7 +20,7 @@
     "env": {
         "APP_NAME": "Laravel Vercel",
         "APP_ENV": "production",
-        "APP_URL": "https://lending-system-livid.vercel.app",
+        "APP_URL": "lending-system-livid.vercel.app",
         "SANCTUM_STATEFUL_DOMAINS": "lending-system-livid.vercel.app",
         "SESSION_SECURE_COOKIE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",

@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 一時的にコメントアウトして、他のマイグレーションを先に実行できるようにする
-        /*
         Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
+            $table->string('key')->primary();  // この行で primary key を設定
             $table->text('value');
             $table->integer('expiration');
             $table->timestamps();
         });
-        */
     }
 
     /**
@@ -28,6 +25,6 @@ return new class extends Migration
     public function down(): void
     {
         // もしコメントアウトしていたら、下記も同様にコメントアウト
-        // Schema::dropIfExists('cache');
+        Schema::dropIfExists('cache');
     }
 };

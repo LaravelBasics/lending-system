@@ -12,7 +12,7 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 
 // Register the Composer autoloader...
 //  元の設定2025/3/19
-// require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
 /** @var Application $app */
@@ -26,4 +26,4 @@ $app->handleRequest(Request::capture());
 * Here is the serverless function entry
 * for deployment with Vercel.
 */
-require __DIR__.'/../public/index.php';
+// require __DIR__.'/../public/index.php';

@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // 一時的にコメントアウトして、他のマイグレーションを先に実行できるようにする
+        /*
         Schema::create('cache', function (Blueprint $table) {
             $table->string('key')->primary();
-            $table->mediumText('value');
+            $table->text('value');
             $table->integer('expiration');
+            $table->timestamps();
         });
-
-        Schema::create('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->string('owner');
-            $table->integer('expiration');
-        });
+        */
     }
 
     /**
@@ -29,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cache');
-        Schema::dropIfExists('cache_locks');
+        // もしコメントアウトしていたら、下記も同様にコメントアウト
+        // Schema::dropIfExists('cache');
     }
 };

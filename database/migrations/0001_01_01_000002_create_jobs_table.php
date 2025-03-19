@@ -20,8 +20,7 @@ return new class extends Migration
             $table->timestamp('available_at');
             $table->timestamps();
 
-            // コメントアウトして一時的にインデックスを作成しない
-            // $table->index('queue'); // ここをコメントアウト
+            $table->index('queue'); // ここをコメントアウト
         });
     }
 

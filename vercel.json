@@ -1,5 +1,4 @@
 {
-    "version": 2,
     "regions": [
         "hnd1"
     ],
@@ -11,7 +10,7 @@
     "routes": [
         {
             "src": "/build/(.*)",
-            "dest": "/public/build/"
+            "dest": "/public/build/$1"
         },
         {
             "src": "/(.*)",
@@ -20,6 +19,10 @@
     ],
     "env": {
         "APP_NAME": "Laravel Vercel",
+        "APP_ENV": "production",
+        "APP_URL": "https://lending-system-livid.vercel.app",
+        "SANCTUM_STATEFUL_DOMAINS": "lending-system-livid.vercel.app",
+        "SESSION_SECURE_COOKIE": "true",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
@@ -29,11 +32,6 @@
         "CACHE_STORE": "array",
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
-        "VIEW_COMPILED_PATH": "/tmp",
-        
-        "APP_ENV": "production",
-        "APP_URL": "lending-system-livid.vercel.app",
-        "SANCTUM_STATEFUL_DOMAINS": "lending-system-livid.vercel.app",
-        "SESSION_SECURE_COOKIE": "true"
+        "VIEW_COMPILED_PATH": "/tmp"
     }
 }

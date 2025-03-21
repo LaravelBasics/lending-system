@@ -14,6 +14,6 @@ class LendingSeeder extends Seeder
     public function run(): void
     {
         // ダミーデータを挿入
-        Lending::factory()->count(21)->create();
+        Lending::factory()->count(100)->create();
     }
 }

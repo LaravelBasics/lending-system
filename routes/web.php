@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LendingController;
 use App\Http\Controllers\CsvController;
 
+
 Route::get('/lendings', [LendingController::class, 'index'])->name('lendings.index');
 Route::post('/lendings', [LendingController::class, 'store'])->name('lendings.store');
 Route::put('/lendings/{id}', [LendingController::class, 'update'])->name('lendings.update');

@@ -297,7 +297,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="showLabel">
                         <span style="color: #e74c3c;">
-                        ID：
+                        ID:
                         @{{ destroyLendingId }}
                         </span>
                         を削除すると復元できません。削除しますか？

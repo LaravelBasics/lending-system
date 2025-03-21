@@ -19,5 +19,6 @@
 <body>
     <h1>@yield('code')</h1>
     <h1>@yield('message')</h1>
+    @yield('content')
 </body>
 </html>

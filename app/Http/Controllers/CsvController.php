@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CsvController extends Controller
 {
-    public function export()
+    public function export(Request $request)
     {
         $fileName = 'lendings.csv'; // ダウンロードされるCSVのファイル名；
         $headers = [
@@ -16,7 +16,49 @@ class CsvController extends Controller
             "Content-Disposition" => "attachment; filename=$fileName", // レスポンスをファイルとしてダウンロードさせる指示です。$fileNameはファイル名を指定します。
         ];
 
-        $lendings = Lending::orderBy('id', 'desc')->get();
+        // セッションから検索条件を取得
+        $searchCondition = $request->session()->get('search_condition', []);
+        $checkboxValue = session('search_checkbox', 0); // 未返却のチェックボックスの値
+
+        // クエリの作成
+        $query = Lending::query();
+
+        if ($searchCondition) {
+            $query->when($searchCondition['name_search'] ?? null, function ($q, $name) {
+                $q->where('name', 'like', '%' . $name . '%');
+            })
+                ->when($searchCondition['item_name_search'] ?? null, function ($q, $item) {
+                    $q->where('item_name', 'like', '%' . $item . '%');
+                })
+                ->when($searchCondition['lend_date_search'] ?? null, function ($q, $lendDate) {
+                    if (preg_match('/^\d{4}$/', $lendDate)) {
+                        $q->whereBetween('lend_date', [$lendDate . '-01-01', $lendDate . '-12-31']);
+                    } elseif (preg_match('/^\d{4}-\d{2}$/', $lendDate)) {
+                        $startDate = $lendDate . '-01';
+                        $endDate = date('Y-m-t', strtotime($startDate));
+                        $q->whereBetween('lend_date', [$startDate, $endDate]);
+                    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $lendDate)) {
+                        $q->where('lend_date', $lendDate);
+                    }
+                })
+                ->when($checkboxValue == 1, function ($q) {
+                    $q->whereNull('return_date');
+                })
+                ->when($searchCondition['return_date_search'] ?? null, function ($q, $returnDate) {
+                    if (preg_match('/^\d{4}$/', $returnDate)) {
+                        $q->whereBetween('return_date', [$returnDate . '-01-01', $returnDate . '-12-31']);
+                    } elseif (preg_match('/^\d{4}-\d{2}$/', $returnDate)) {
+                        $startDate = $returnDate . '-01';
+                        $endDate = date('Y-m-t', strtotime($startDate));
+                        $q->whereBetween('return_date', [$startDate, $endDate]);
+                    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $returnDate)) {
+                        $q->where('return_date', $returnDate);
+                    }
+                });
+        }
+
+        // 検索結果を取得
+        $lendings = $query->orderBy('id', 'desc')->get();
 
         // CSVデータを出力するための無名関数（クロージャ）を作成しています。この関数内で、実際にCSVデータをファイルに書き込む処理を行います。
         $callback = function () use ($lendings) {

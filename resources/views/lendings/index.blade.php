@@ -88,11 +88,6 @@
 
     }
 
-    /* 表のタイトル（th）にホバー効果を適用 */
-    /* .simple-table th:hover {
-        background-color: rgb(255, 253, 111);
-    } */
-
     /* 表のid行にホバー効果 */
     .simple-table tbody tr:hover td {
         background-color: #58ec64;
@@ -332,7 +327,6 @@
 
     {{-- 検索フォーム --}}
     <form action="{{ route('lendings.index') }}" method="GET">
-        @csrf
         <div class="table-container">
             <table class="simple-table">
                 <tr>
@@ -358,11 +352,10 @@
                     </th>
                     <th class="custom-input"
                         style="text-align: center; margin: 0; padding: 0rem 0rem 1rem 0rem; position: relative; top: -0.625rem;">
-                        <!-- Hiddenフィールドで未チェック時の値を送信 -->
                         <label for="search_checkbox"
                             style="font-size: 0.75rem; display: inline-block; color: #dc3545;">未返却</label>
                         <input type="hidden" name="search_checkbox" value="0">
-                        <input type="checkbox" name="search_checkbox" value="1" {{ request('search_checkbox')=='1'
+                        <input type="checkbox" name="search_checkbox" value="1" {{ session('search_checkbox') == '1'
                             ? 'checked' : '' }} id="search_checkbox">
                     </th>
                     <th style="text-align: center;">
@@ -379,15 +372,14 @@
         @csrf
         @method('PUT')
         <div class="table-container">
-            <table v-if="!showUnreturned" class="simple-table">
+            <table class="simple-table">
                 <thead>
                     <tr>
                         <th style="text-align: center;">ID</th>
                         <th style="text-align: center;">名前</th>
                         <th style="text-align: center;">品名</th>
                         <th style="text-align: center;">貸出日</th>
-                        <th style="text-align: center; "><a class="link-style" @click="toggleShowUnreturned">返却日</a>
-                        </th>
+                        <th style="text-align: center; ">返却日</th>
                         <th style="text-align: center;">編集</th>
                     </tr>
                 </thead>
@@ -459,95 +451,7 @@
                     <tr>
                         <td colspan="6">
                             <p>
-                                {{ $lendings->links('vendor.pagination.bootstrap-5') }}
-                            </p>
-                            <p>
-                                {{ $lendings->firstItem() }} - {{ $lendings->lastItem() }} / {{ $lendings->total() }} 件
-                            </p>
-                        </td>
-                    </tr>
-                </tfoot>
-                </tbody>
-            </table>
-
-            <table v-else class="simple-table">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">ID</th>
-                        <th style="text-align: center;">名前</th>
-                        <th style="text-align: center;">品名</th>
-                        <th style="text-align: center;">貸出日</th>
-                        <th style="text-align: center; "><a class="link-style" @click="toggleShowUnreturned">返却日</a>
-                        </th>
-                        <th style="text-align: center;">編集</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($lendings as $lending)
-                    <tr v-if="editLendingId == {{ $lending->id }}">
-                        <td>{{ $lending->id }}</td>
-                        <td class="custom-input">
-                            <input name="name_update" v-model="editLendingUpdate.name_update">
-                            <div v-if="validationErrors">
-                                @error('name_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </td>
-                        <td class="custom-input">
-                            <input name="item_name_update" v-model="editLendingUpdate.item_name_update">
-                            <div v-if="validationErrors">
-                                @error('item_name_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </td>
-                        <td class="custom-input">
-                            <input name="lend_date_update" v-model="editLendingUpdate.lend_date_update">
-                            <div v-if="validationErrors">
-                                @error('lend_date_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </td>
-                        <td class="custom-input">
-                            <input name="return_date_update" placeholder="未返却"
-                                v-model="editLendingUpdate.return_date_update">
-                            <div v-if="validationErrors">
-                                @error('return_date_update')
-                                <small style="color: #dc3545;">※{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </td>
-                        <td style="text-align: center;">
-                            <input type="hidden" name="id_update" :value="editLendingId">
-                            <button type="submit" class="btn btn-success">登録</button>
-                        </td>
-                    </tr>
-                    {{-- 返却日がnullの時、cssで色付け --}}
-                    <tr {{ !$lending->return_date ? 'class=pending-return' : '' }} v-else>
-                        @if($lending->return_date)
-                        @else
-                        <td>{{ $lending->id }}</td>
-                        <td>{{ $lending->name }}</td>
-                        <td>{{ $lending->item_name }}</td>
-                        <td>{{ $lending->lend_date }}</td>
-                        <td style="text-align: center;">
-                            <button type="button" @click="showEditModal({{ $lending->id }})"
-                                class="btn btn-danger">即日返却</button>
-                        </td>
-                        <td style="text-align: center;">
-                            <button type="button" @click="startEdit({{ $lending->id }})"
-                                class="btn btn-primary">編集</button>
-                        </td>
-                        @endif
-                    </tr>
-                    @endforeach
-                <tfoot>
-                    <tr>
-                        <td colspan="6">
-                            <p>
-                                {{ $lendings->links('vendor.pagination.bootstrap-5') }}
+                                {{ $lendings->appends(request()->except('page'))->links('vendor.pagination.bootstrap-5') }}
                             </p>
                             <p>
                                 {{ $lendings->firstItem() }} - {{ $lendings->lastItem() }} / {{ $lendings->total() }} 件
@@ -566,7 +470,13 @@
         <div class="modal-dialog modal-dialog-centered" style="max-width: 15cm;">
             <div class="modal-content" style="height: 10cm;">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="showEditLabel">今日の日付で返却しますか？</h5>
+                    <h5 class="modal-title" id="showEditLabel">
+                        <sapn style="color: #e74c3c">
+                            ID:
+                            @{{ todayEditId }}
+                        </sapn>
+                        今日の日付で返却しますか？
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -630,7 +540,6 @@
                 today: null, // 今日の日付を取得
                 todayEditId: null, // バリデーション時にIdを取得
                 isMobile: window.matchMedia("(max-width: 768px)").matches,
-                showUnreturned: false, // 未返却のみ表示
             };
         },
         mounted() {
@@ -656,9 +565,6 @@
             window.removeEventListener("resize", this.updateMobileStatus);
         },
         methods: {
-            toggleShowUnreturned() {
-                this.showUnreturned = !this.showUnreturned;
-            },
             updateMobileStatus() { // 768px判定
                 this.isMobile = window.matchMedia("(max-width: 768px)").matches;
             },

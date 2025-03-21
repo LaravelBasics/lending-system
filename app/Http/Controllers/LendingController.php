@@ -16,8 +16,14 @@ class LendingController extends Controller
      */
     public function index(Request $request)
     {
-        // チェックボックスが選ばれていれば、未返却のみの検索条件を追加する
         $checkboxValue = $request->input('search_checkbox', 0); // デフォルトは 0
+
+        // チェックボックスが選ばれている場合（値が1）
+        if ($checkboxValue == 1) {
+            session(['search_checkbox' => $checkboxValue]); // セッションに保存
+        } else {
+            session()->forget('search_checkbox'); // チェックボックスが未選択の場合、セッションの値を削除
+        }
 
         // 検索条件のキーを定義
         $searchKey = ['name_search', 'item_name_search', 'lend_date_search', 'return_date_search'];
@@ -47,21 +53,24 @@ class LendingController extends Controller
                     // 年（YYYY）の場合
                     if (preg_match('/^\d{4}$/', $lendDate)) {
                         // 例: 2025 の場合
-                        $q->whereRaw("YEAR(lend_date) = ?", [$lendDate]);
+                        $q->whereBetween('lend_date', [$lendDate . '-01-01', $lendDate . '-12-31']);
                     }
                     // 年月（YYYY-MM）の場合
                     elseif (preg_match('/^\d{4}-\d{2}$/', $lendDate)) {
                         // 例: 2025-01 の場合
-                        $q->whereRaw("DATE_FORMAT(lend_date, '%Y-%m') = ?", [$lendDate]);
+                        $startDate = $lendDate . '-01';
+                        $endDate = date('Y-m-t', strtotime($startDate)); // 月末日を自動取得
+
+                        $q->whereBetween('lend_date', [$startDate, $endDate]);
                     }
                     // 日付（YYYY-MM-DD）の場合
                     elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $lendDate)) {
                         // 例: 2024-01-01 の場合
-                        $q->whereRaw("DATE_FORMAT(lend_date, '%Y-%m-%d') = ?", [$lendDate]);
+                        $q->where('lend_date', $lendDate);
                     }
                 })
                 // チェックボックスが選ばれている場合、返却日がnullの物を検索する
-                ->when($checkboxValue == 1, function ($q) {
+                ->when(session('search_checkbox') == 1, function ($q) {
                     // 未返却（return_date が NULL）を検索
                     $q->whereNull('return_date');
                 })
@@ -69,17 +78,20 @@ class LendingController extends Controller
                     // 年（YYYY）の場合
                     if (preg_match('/^\d{4}$/', $returnDate)) {
                         // 例: 2024 の場合
-                        $q->whereRaw("YEAR(return_date) = ?", [$returnDate]);
+                        $q->whereBetween('return_date', [$returnDate . '-01-01', $returnDate . '-12-31']);
                     }
                     // 年月（YYYY-MM）の場合
                     elseif (preg_match('/^\d{4}-\d{2}$/', $returnDate)) {
                         // 例: 2024-01 の場合
-                        $q->whereRaw("DATE_FORMAT(return_date, '%Y-%m') = ?", [$returnDate]);
+                        $startDate = $returnDate . '-01';
+                        $endDate = date('Y-m-t', strtotime($startDate)); // 月末日を自動取得
+                    
+                        $q->whereBetween('return_date', [$startDate, $endDate]);
                     }
                     // 日付（YYYY-MM-DD）の場合
                     elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $returnDate)) {
                         // 例: 2024-01-01 の場合
-                        $q->whereRaw("DATE_FORMAT(return_date, '%Y-%m-%d') = ?", [$returnDate]);
+                        $q->where('return_date', $returnDate);
                     }
                 });
         }

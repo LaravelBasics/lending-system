@@ -25,8 +25,8 @@ class UpdateLendingRequest extends FormRequest
         return [
             'name_update'        => 'required|string|max:255',
             'item_name_update'   => 'required|string|max:255',
-            'lend_date_update'   => 'required|date_format:Y-m-d',
-            'return_date_update' => 'nullable|date_format:Y-m-d|after_or_equal:lend_date_update',//返却日が貸出日と同じor後
+            'lend_date_update'   => 'required|date|date_format:Y-m-d',
+            'return_date_update' => 'nullable|date|date_format:Y-m-d|after_or_equal:lend_date_update',//返却日が貸出日と同じor後
         ];
     }
 

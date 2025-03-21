@@ -107,8 +107,6 @@
         /* 文字色は暗めに */
     }
 
-
-
     .show-today {
         font-size: 1.25rem;
         line-height: 1.6;
@@ -463,6 +461,8 @@
             </table>
         </div>
     </form>
+    @else
+    <p style="color: #dc3545; padding-left: 1rem;">データが見つかりません</p>
     @endif
 
     {{-- モーダル --}}

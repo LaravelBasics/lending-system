@@ -39,7 +39,7 @@ class LendingFactory extends Factory
         return [
             'name' => $faker->name, // ランダムな名前
             'item_name' => $faker->randomElement($itemNames), // ランダムな品名
-            'lend_date' => $faker->dateTimeBetween('2024-01-01', '2024-12-31')->format('Y-m-d'), // ランダムな貸出日
+            'lend_date' => $faker->dateTimeBetween('2020-01-01', '2024-12-31')->format('Y-m-d'), // ランダムな貸出日
             'return_date' => $returnDate ? $returnDate->format('Y-m-d') : null, // 返却日（1年後のランダムな日付、NULL可）
         ];
     }

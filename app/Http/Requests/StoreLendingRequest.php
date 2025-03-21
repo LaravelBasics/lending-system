@@ -25,8 +25,8 @@ class StoreLendingRequest extends FormRequest
         return [
             'name'        => 'required|string|max:255',
             'item_name'   => 'required|string|max:255',
-            'lend_date'   => 'required|date_format:Y-m-d',
-            'return_date' => 'nullable|date_format:Y-m-d|after_or_equal:lend_date',//返却日が貸出日と同じor後
+            'lend_date'   => 'required|date|date_format:Y-m-d',
+            'return_date' => 'nullable|date|date_format:Y-m-d|after_or_equal:lend_date',//返却日が貸出日と同じor後
         ];
     }
 

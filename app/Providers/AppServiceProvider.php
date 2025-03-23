@@ -25,9 +25,9 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // カスタムバリデーションルール
+        // カスタムバリデーションの定義
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
-            // 年のみ (例: 2020)
+            // 年（例: 2020）
             if (preg_match('/^\d{4}$/', $value)) {
                 return true;
             }
@@ -40,10 +40,23 @@ class AppServiceProvider extends ServiceProvider
             // 完全な日付 (例: 2020-02-29)
             if (preg_match('/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/', $value)) {
                 // 日付として有効かどうかをチェック
-                return \DateTime::createFromFormat('Y-m-d', $value) !== false;
+                $date = \DateTime::createFromFormat('Y-m-d', $value);
+
+                // 日付が無効な場合
+                if ($date === false) {
+                    return false; // 無効な日付
+                }
+
+                // 有効な日付の場合
+                return $date->format('Y-m-d') === $value; // 日付のフォーマットが一致するかを確認
             }
 
             return false;
         });
+
+        // カスタムメッセージの定義
+        // Validator::replacer('valid_date', function ($message, $attribute, $rule, $parameters) {
+        //     return ":attribute は無効な日付です。";
+        // });
     }
 }

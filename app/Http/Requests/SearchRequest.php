@@ -28,13 +28,10 @@ class SearchRequest extends FormRequest
             // 品名検索も空でもOK
             'item_name_search' => 'nullable|string|max:255',
 
+            // 貸出日も空でOK+カスタムバリデーション　app\Providers\AppServiceProvider.php
             'lend_date_search' => 'nullable|valid_date',
-            'return_date_search' => 'nullable|valid_date|after_or_equal:lend_date_search',
-            // 貸出日も空でOK
-            // 'lend_date_search' => 'nullable|date|date_format:Y-m-d',
-
             // 返却日（返却日がある場合のみバリデーションを行う）
-            // 'return_date_search' => 'nullable|date|after_or_equal:lend_date_search',
+            'return_date_search' => 'nullable|valid_date',
 
             // 未返却チェックボックス（バリデーションなし）
             'search_checkbox' => 'nullable|in:0,1',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLendingRequest;
 use App\Http\Requests\UpdateLendingRequest;
+use App\Http\Requests\SearchRequest;
 use App\Models\Lending;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -14,7 +15,7 @@ class LendingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(SearchRequest $request)
     {
         $checkboxValue = $request->input('search_checkbox', 0); // デフォルトは 0
 

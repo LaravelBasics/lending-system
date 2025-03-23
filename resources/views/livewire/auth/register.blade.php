@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <x-auth-header title="Create an account" description="Enter your details below to create your account" />
+    <x-auth-header title="アカウントを作成する" description="アカウントを作成するには、以下の詳細を入力してください" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
@@ -15,7 +15,7 @@
             required
             autofocus
             autocomplete="name"
-            placeholder="Full name"
+            placeholder="フルネーム"
         />
 
         <!-- Email Address -->
@@ -27,7 +27,7 @@
             name="email"
             required
             autocomplete="email"
-            placeholder="email@example.com"
+            placeholder="test@test.com"
         />
 
         <!-- Password -->
@@ -39,7 +39,7 @@
             name="password"
             required
             autocomplete="new-password"
-            placeholder="Password"
+            placeholder="パスワード"
         />
 
         <!-- Confirm Password -->
@@ -51,7 +51,7 @@
             name="password_confirmation"
             required
             autocomplete="new-password"
-            placeholder="Confirm password"
+            placeholder="確認用パスワード"
         />
 
         <div class="flex items-center justify-end">

@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <x-auth-header title="Log in to your account" description="Enter your email and password below to log in" />
+    <x-auth-header title="アカウントにログイン" description="ログインするには、以下のメールアドレスとパスワードを入力してください" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
@@ -14,7 +14,7 @@
             required
             autofocus
             autocomplete="email"
-            placeholder="email@example.com"
+            placeholder="メールアドレス"
         />
 
         <!-- Password -->
@@ -26,7 +26,7 @@
                 name="password"
                 required
                 autocomplete="current-password"
-                placeholder="Password"
+                placeholder="パスワード"
             />
 
             @if (Route::has('password.request'))
@@ -37,10 +37,10 @@
         </div>
 
         <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
+        <flux:checkbox wire:model="remember" :label="__('ログイン状態を保持する')" />
 
         <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
+            <flux:button variant="primary" type="submit" class="w-full">{{ __('ログイン') }}</flux:button>
         </div>
     </form>
 

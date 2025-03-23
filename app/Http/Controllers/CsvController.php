@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Lending;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 // use Symfony\Component\HttpFoundation\StreamedResponse; // データをストリームとして出力するために使用
 
 class CsvController extends Controller
 {
-    public function export(Request $request)
+    public function export(SearchRequest $request)
     {
         $fileName = 'lendings.csv'; // ダウンロードされるCSVのファイル名；
         $headers = [

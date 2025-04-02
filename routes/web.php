@@ -16,6 +16,36 @@ Route::delete('/lendings/{id}', [LendingController::class, 'destroy'])->name('le
 Route::get('/lendings/confirm', [LendingController::class, 'confirm'])->name('lendings.confirm');
 Route::get('/export-csv', [CsvController::class, 'export'])->name('export.csv');
 
+use App\Models\Lending;
+use Illuminate\Http\Request;
+
+Route::get('/search', function (Request $request) {
+    // クエリパラメータ 'q' を取得（ユーザーの検索入力）
+    $query = $request->query('q');
+    $column = $request->query('column'); // 'name' または 'item_name' など
+    // クエリが空なら空の配列を返す（全件取得せず負荷を軽減）
+    if (!$query) {
+        return response()->json([]);
+    }
+
+    $allowedColumns = ['name', 'item_name']; // 許可されたカラム名のリスト
+
+    // カラム名が許可リストに含まれていない場合、検索を実行せずに空の結果を返す
+    if (!in_array($column, $allowedColumns)) {
+        return response()->json([]); // 許可されていないカラムの場合は空の配列を返す
+    }
+
+    // カラム名が許可リストに含まれている場合のみ検索を実行
+    $results = Lending::where($column, 'LIKE', "%{$query}%")
+        ->select($column)
+        ->groupBy($column)
+        ->orderByRaw('MAX(id) DESC') // 最新データを優先
+        ->get();
+
+    // 結果をJSON形式で返す
+    return response()->json($results);
+});
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
